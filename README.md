@@ -30,17 +30,17 @@ This is a hotel reservation system program written in Go.
 
 ### Testing
 
-**Switch to the hotel folder inside the project**:
+1. **Switch to the hotel folder inside the project**: 
     ```bash
     cd hotel
     ```
 
-1. **To test the functionality of the program, including concurrency, use the following commands**:
+2. **To test the functionality of the program, including concurrency, use the following commands**:
     ```bash
     go test -v
     ```
 
-2. **For detecting race conditions in your tests, run**:
+3. **For detecting race conditions in your tests, run**:
     ```bash
     go test -race
     ```
