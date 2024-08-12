@@ -1,6 +1,8 @@
 package hotel
 
 import (
+	"fmt"
+	"sync"
 	"testing"
 	"time"
 )
@@ -172,4 +174,42 @@ func TestCheckVacantRoomsPeriodically(t *testing.T) {
 	// Test checking vacant rooms periodically
 	time.Sleep(2 * time.Second)
 	done <- true
+}
+
+// Function to simulate booking a room by a guest
+func simulateBooking(name string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	err := reserveRooms(name)
+	if err != nil {
+		fmt.Printf("Error for %s: %v\n", name, err)
+	}
+}
+
+// Test two rooms booking simultaneously
+func TestSimultaneousBooking(t *testing.T) {
+	resetRooms()
+
+	var room1, room2 int
+	var wg sync.WaitGroup
+
+	// Simulate simultaneous booking attempts
+	wg.Add(2)
+	go simulateBooking("john", &wg)
+	go simulateBooking("doe", &wg)
+
+	wg.Wait()
+
+	for _, room := range Rooms {
+		if room.GuestName == "john" {
+			room1 = room.RoomNumber
+		}
+
+		if room.GuestName == "doe" {
+			room2 = room.RoomNumber
+		}
+	}
+
+	if room1 == room2 {
+		t.Errorf("Expected two different rooms to be reserved")
+	}
 }
